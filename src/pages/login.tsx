@@ -1,40 +1,27 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import useStore from '@/store/UserStore'; // zustand 스토어 가져오기
+import useStore from '@/store/UserStore';
 import style from '@/styles/login.module.css';
 
 const Login = () => {
-  const [values, setValues] = useState({
-    email: '',
-    password: '',
-  });
-
-  const { actions, isPending } = useStore((state) => ({
-    actions: state.actions,
-    isPending: state.isPending,
-  }));
-
+  const [values, setValues] = useState({ email: '', password: '' });
+  const { isPending, login } = useStore();
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setValues((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-    }));
+    setValues({
+      ...values,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { email, password } = values;
-
     try {
-      await actions.login({ email, password });
-
-      // 로그인 성공 후 리디렉션
+      await login(values);
       router.push('/me');
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Login failed:', error);
     }
   };
 
@@ -62,7 +49,9 @@ const Login = () => {
           value={values.password}
           onChange={handleChange}
         />
-        <button type="submit" disabled={isPending}>로그인</button>
+        <button type="submit" disabled={isPending}>
+          로그인
+        </button>
       </form>
       <p onClick={handleGoRegister}>회원가입</p>
     </div>
