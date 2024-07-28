@@ -1,21 +1,22 @@
-import React from 'react';
-import style from '@/styles/login.module.css';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import axios from '@/lib/axios';
-
-const setCookie = (name, value, days) => {
-  const expires = new Date();
-  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;Secure;SameSite=None`;
-};
+import useStore from '@/store/UserStore'; // zustand 스토어 가져오기
+import style from '@/styles/login.module.css';
 
 const Login = () => {
   const [values, setValues] = useState({
     email: '',
     password: '',
   });
-  const handleChange = (e) => {
+
+  const { actions, isPending } = useStore((state) => ({
+    actions: state.actions,
+    isPending: state.isPending,
+  }));
+
+  const router = useRouter();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setValues((prevValues) => ({
       ...prevValues,
@@ -23,24 +24,12 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { email, password } = values;
 
     try {
-      const res = await axios.post('/auth/signIn', {
-        email,
-        password,
-      });
-
-      // 응답 본문에서 쿠키 추출
-      const { accessToken, refreshToken } = res.data;
-
-      // 쿠키 저장
-      setCookie('accessToken', accessToken, 7); // 7일 동안 유효
-      setCookie('refreshToken', refreshToken, 7); // 7일 동안 유효
-
-      console.log('Login successful:', res.data);
+      await actions.login({ email, password });
 
       // 로그인 성공 후 리디렉션
       router.push('/me');
@@ -48,15 +37,16 @@ const Login = () => {
       console.error('Error:', error);
     }
   };
-  const router = useRouter();
+
   const handleGoRegister = () => {
     router.push('/register');
   };
+
   return (
     <div className={style.LoginContainer}>
       <p className={style.LoginTitle}>로그인</p>
       <form onSubmit={handleSubmit} className={style.LoginForm}>
-        <label htmlFor="">이메일</label>
+        <label htmlFor="email">이메일</label>
         <input
           type="email"
           placeholder="이메일을 입력해 주세요"
@@ -64,7 +54,7 @@ const Login = () => {
           value={values.email}
           onChange={handleChange}
         />
-        <label htmlFor="">비밀번호</label>
+        <label htmlFor="password">비밀번호</label>
         <input
           type="password"
           placeholder="비밀번호를 입력해 주세요"
@@ -72,7 +62,7 @@ const Login = () => {
           value={values.password}
           onChange={handleChange}
         />
-        <button>로그인</button>
+        <button type="submit" disabled={isPending}>로그인</button>
       </form>
       <p onClick={handleGoRegister}>회원가입</p>
     </div>
