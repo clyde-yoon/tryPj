@@ -1,0 +1,29 @@
+POST https://wikied-api.vercel.app/7-3/auth/signUp
+Content-Type: application/json
+
+{
+    "email":"codeieett@example.com",
+    "name":"코드잇123",
+    "password":"p@ssword",
+    "passwordConfirmation": "p@ssword"
+}
+
+###
+POST https://wikied-api.vercel.app/7-3/auth/signUp
+Content-Type: application/json
+
+{
+    "email":"qwerqwer@gmail.com",
+    "name":"이윤재1",
+    "password":"qwerqwer",
+    "passwordConfirmation": "qwerqwer"
+}
+
+###
+POST https://wikied-api.vercel.app/7/auth/signIn
+Content-Type: application/json
+
+{
+    "email":"codeieett@example.com",
+    "password":"p@ssword"
+}
