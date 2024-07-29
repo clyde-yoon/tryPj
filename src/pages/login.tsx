@@ -25,6 +25,8 @@ const Login = () => {
     }
   };
 
+  //axios를 통신하는 동안 button을 다시 클릭할 수 없는 로직 필요
+
   const handleGoRegister = () => {
     router.push('/register');
   };

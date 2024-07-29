@@ -1,14 +1,17 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'https://wikied-api.vercel.app/7-3/:path*', // API URL
-      },
-    ];
-  },
-};
+// import dotenv from 'dotenv';
+// dotenv.config();
 
-export default nextConfig;
+// /** @type {import('next').NextConfig} */
+// const nextConfig = {
+//   reactStrictMode: true,
+//   async rewrites() {
+//     return [
+//       {
+//         source: '/api/:path*',
+//         destination: `${process.env.API_URL}/:path*`,
+//       },
+//     ];
+//   },
+// };
+
+// export default nextConfig;

@@ -1,7 +1,7 @@
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
 import axios from '@/lib/axios'; // Axios 인스턴스 가져오기
-import { setCookie, deleteCookie, getCookie } from 'cookies-next'; // 쿠키 처리 라이브러리
+import { setCookie, deleteCookie } from 'cookies-next'; // 쿠키 처리 라이브러리
 
 interface User {
   id: number;
